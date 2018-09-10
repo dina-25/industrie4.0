@@ -1,0 +1,60 @@
+package de.montiarcautomaton.lejos;
+
+import de.montiarcautomaton.lejos.lib.Datatypes.MotorPort;
+import de.montiarcautomaton.lejos.lib.Datatypes.SensorPort;
+
+import de.montiarcautomaton.lejos.lib.timer.Timer;
+import de.montiarcautomaton.lejos.lib.timer.Datatypes.TimerCmd;
+import de.montiarcautomaton.lejos.lib.timer.Datatypes.TimerSignal;
+
+import de.montiarcautomaton.lejos.lib.motor.Motor;
+import de.montiarcautomaton.lejos.lib.motor.Datatypes.MotorCmd;
+
+import de.montiarcautomaton.lejos.lib.colorsensor.Colorsensor;
+
+import de.montiarcautomaton.lejos.lib.lightsensor.Lightsensor;
+
+import de.montiarcautomaton.lejos.lib.ultrasonic.Ultrasonic;
+
+import de.montiarcautomaton.lejos.lib.logger.Logger;
+
+import de.montiarcautomaton.lejos.lib.pid.PID;
+
+<<deploy>> component BumperBot {
+
+
+	component Motor(MotorPort.A) leftMotor;
+	
+	component Motor(MotorPort.B) rightMotor;
+	
+	component BumpControl bumpcontrol;
+	
+	component Colorsensor(SensorPort.S1) colorSensor;
+	
+	component Lightsensor(SensorPort.S2) lightSensor;
+	
+	component Ultrasonic(SensorPort.S3) ultraSonic;
+	
+	component PID pid;
+	
+	component Timer(10) timer;
+	
+	component Logger logger;
+	
+	connect bumpcontrol.leftCmd -> leftMotor.cmd;
+	connect bumpcontrol.leftSpeed -> leftMotor.speed;
+	connect bumpcontrol.rightCmd -> rightMotor.cmd;
+	connect bumpcontrol.rightSpeed -> rightMotor.speed;
+	connect bumpcontrol.log -> logger.log;
+	connect colorSensor.colorID -> bumpcontrol.incolorID;
+	connect lightSensor.lightLevel -> bumpcontrol.inlightLevel;
+	connect ultraSonic.distance -> bumpcontrol.distance;
+	connect bumpcontrol.timerCommand -> timer.cmd;
+	connect timer.signal -> bumpcontrol.timerSignal;
+	connect pid.leftTurn -> bumpcontrol.leftTurn;
+	connect pid.rightTurn -> bumpcontrol.rightTurn;
+	connect bumpcontrol.lightLevel -> pid.lightLevel;
+	connect bumpcontrol.colorID -> pid.colorID;
+	connect bumpcontrol.leftSpeed -> pid.leftSpeed;
+	connect bumpcontrol.rightSpeed -> pid.rightSpeed;
+}

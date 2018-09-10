@@ -1,0 +1,68 @@
+package de.montiarcautomaton.lejos;
+
+import de.montiarcautomaton.lejos.lib.motor.Datatypes.MotorCmd;
+import de.montiarcautomaton.lejos.lib.timer.Datatypes.TimerSignal;
+import de.montiarcautomaton.lejos.lib.timer.Datatypes.TimerCmd;
+
+component BumpControl {
+
+	port
+		
+		in Integer incolorID,
+		in Integer inlightLevel,
+		in Integer distance,
+		in Integer leftTurn,
+		in Integer rightTurn,
+		in TimerSignal timerSignal,
+		out MotorCmd leftCmd,
+		out Integer leftSpeed,
+		out MotorCmd rightCmd,
+		out Integer rightSpeed,
+		out String log,
+		out Integer colorID,
+		out Integer lightLevel,
+		out TimerCmd timerCommand;
+
+	automaton BumpControl {
+		state Idle, Driving, FollowCorrect, Blocked;
+		
+		initial Idle / {
+
+			log="Idle"
+		};
+		
+		Idle -> Driving / {
+
+			log = "Driving"
+		};
+		
+		Driving -> Blocked [distance < -5] /{
+			leftCmd = MotorCmd.STOP,
+			rightCmd = MotorCmd.STOP,
+			timerCommand = TimerCmd.DOUBLE,
+			log = "waiting"
+		};
+		
+		Blocked -> Driving {timerSignal = TimerSignal.ALERT} / { 
+			leftCmd = MotorCmd.FORWARD,
+			rightCmd = MotorCmd.FORWARD,
+			leftSpeed = 70,
+			rightSpeed = 70,
+			log = "Driving"
+		};
+		
+		Driving -> FollowCorrect [inlightLevel > 1 ] / {
+			lightLevel = inlightLevel,
+			colorID = incolorID,
+			log="detecting" + "__" + inlightLevel + "__" + incolorID
+		};
+		
+		FollowCorrect -> Driving / {
+			leftSpeed = leftTurn,
+			rightSpeed = rightTurn,
+			log = "turning" + "__" + inlightLevel + "__" + incolorID
+		}; 
+		
+
+	}
+}

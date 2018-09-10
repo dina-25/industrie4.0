@@ -1,0 +1,8 @@
+package de.montiarcautomaton.lejos.lib.colorsensor;
+
+import de.montiarcautomaton.lejos.lib.Datatypes.SensorPort;
+
+component Colorsensor(SensorPort sensorPort) {
+	port
+		out Integer colorID;
+}

@@ -1,0 +1,8 @@
+package de.montiarcautomaton.lejos.lib.lightsensor;
+
+import de.montiarcautomaton.lejos.lib.Datatypes.SensorPort;
+
+component Lightsensor(SensorPort sensorPort) {
+	port
+		out Integer lightLevel;
+}

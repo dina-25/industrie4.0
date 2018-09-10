@@ -1,0 +1,12 @@
+package de.montiarcautomaton.lejos.lib.pid;
+
+component PID {
+	port
+		in Integer lightLevel,
+		in Integer colorID,
+		in Integer leftSpeed,
+		in Integer rightSpeed,
+		out Integer leftTurn,
+		out Integer rightTurn;
+
+}
